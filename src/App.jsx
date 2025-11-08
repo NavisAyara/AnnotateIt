@@ -1,29 +1,27 @@
 function App() {
   const handleDragOver = (event) => {
-    event.preventDefault();
+    event.preventDefault(); // the browser will not prepare to open the image
     event.target.classList.add("drag-over");
   };
 
   const handleDragLeave = (event) => {
-    event.target.classList.remove("drag-over");
+    event.target.classList.remove("drag-over"); // add visual feedback
   };
 
   const handleImageDrop = (event) => {
-    event.preventDefault();
-    event.target.classList.remove("drag-over");
+    event.preventDefault(); // the browser will not open the image after release
+    event.target.classList.remove("drag-over"); // remove visual feedback after release
 
     const file = event.dataTransfer.files[0];
-    console.log(file);
   };
 
   const handleUploadClick = () => {
     const fileInput = document.getElementById("file-input");
-    fileInput.click();
+    fileInput.click(); // manually invoke the file picker modal
   };
 
   const handleImageChange = (event) => {
     const file = event.target.files[0];
-    console.log(file);
   };
 
   return (
