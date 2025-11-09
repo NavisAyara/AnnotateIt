@@ -1,5 +1,7 @@
 import { useState } from "react";
 
+// TODO: Percentage-based positioning for markers (for responsivity)
+
 function UploadDisplay({ imageURL }) {
   const [points, setPoints] = useState([]);
   return (
@@ -31,8 +33,8 @@ function UploadDisplay({ imageURL }) {
           newElem.style.width = "50px";
           newElem.style.height = "50px";
           newElem.style.background = "black";
-          newElem.style.left = `${x}px`;
-          newElem.style.top = `${y}px`;
+          newElem.style.left = `${(x / rect.width) * 100}%`;
+          newElem.style.top = `${(y / rect.height) * 100}%`;
           newElem.style.zIndex = "2";
           newElem.style.transform = `translateX(-50%) translateY(-50%)`;
           event.target.appendChild(newElem);
@@ -52,7 +54,7 @@ function UploadDisplay({ imageURL }) {
   );
 }
 
-function App() {
+function AnnotateSection() {
   const [imgURL, setImgURL] = useState(null);
   const [isJSONLoaded, setIsJSONLoaded] = useState(false);
   const [annotations, setAnnotations] = useState([]);
@@ -88,59 +90,62 @@ function App() {
   const loadFromJSON = () => {};
 
   return (
+    <div>
+      <div
+        id="drop-zone"
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+        onDrop={handleImageDrop}
+        className={imgURL ? "is-displaying" : ""}
+      >
+        {imgURL ? (
+          <UploadDisplay imageURL={imgURL} />
+        ) : (
+          <>
+            <p>
+              Drag and drop an image or click{" "}
+              <span id="upload-button" onClick={handleUploadClick}>
+                here
+              </span>
+            </p>
+          </>
+        )}
+        <input
+          onChange={handleImageChange}
+          type="file"
+          id="file-input"
+          style={{ display: "none" }}
+        ></input>
+      </div>
+      <div className="action-buttons">
+        <button disabled={imgURL ? false : true} onClick={handleUploadClick}>
+          Upload New
+        </button>
+        <button
+          disabled={imgURL && !isJSONLoaded ? false : true}
+          onClick={loadFromJSON}
+        >
+          Load JSON
+        </button>
+        <button
+          disabled={annotations.length > 0 ? false : true}
+          onClick={saveToJSON}
+        >
+          Download JSON
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function App() {
+  return (
     <main>
       <header>
         <h1>AnnotateIt</h1>
       </header>
       <div>
-        <div>
-          <div
-            id="drop-zone"
-            onDragOver={handleDragOver}
-            onDragLeave={handleDragLeave}
-            onDrop={handleImageDrop}
-            className={imgURL ? "is-displaying" : ""}
-          >
-            {imgURL ? (
-              <UploadDisplay imageURL={imgURL} />
-            ) : (
-              <>
-                <p>
-                  Drag and drop an image or click{" "}
-                  <span id="upload-button" onClick={handleUploadClick}>
-                    here
-                  </span>
-                </p>
-              </>
-            )}
-            <input
-              onChange={handleImageChange}
-              type="file"
-              id="file-input"
-              style={{ display: "none" }}
-            ></input>
-          </div>
-          <div className="action-buttons">
-            <button
-              disabled={imgURL ? false : true}
-              onClick={handleUploadClick}
-            >
-              Upload New
-            </button>
-            <button
-              disabled={imgURL && !isJSONLoaded ? false : true}
-              onClick={loadFromJSON}
-            >
-              Load JSON
-            </button>
-            <button
-              disabled={annotations.length > 0 ? false : true}
-              onClick={saveToJSON}
-            >
-              Download JSON
-            </button>
-          </div>
-        </div>
+        <AnnotateSection />
       </div>
     </main>
   );
