@@ -77,3 +77,18 @@ main > div > div {
 .action-buttons > button:disabled {
     border-color: gainsboro;
 }
+
+.marker {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    background-color: red;
+    border-radius: 50%;
+    z-index: 3;
+    transform: translateX(-50%) translateY(-50%);
+    transition: scale 0.2s ease;
+}
+
+.marker:hover {
+    scale: 1.3;
+}

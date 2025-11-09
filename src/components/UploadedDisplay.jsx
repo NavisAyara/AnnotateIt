@@ -1,4 +1,17 @@
 export default function UploadDisplay({ imageURL, points, setPoints }) {
+  let x, y, boundingBox, mouseEvent;
+
+  const createMarker = (event, rect, localX, localY) => {
+    const newElem = document.createElement("div");
+    newElem.className = "marker";
+    newElem.style.left = `${localX}%`;
+    newElem.style.top = `${localY}%`;
+    newElem.addEventListener("click", (e) => {
+      e.stopPropagation();
+    });
+    event.target.parentNode.appendChild(newElem);
+  };
+
   return (
     <div
       style={{
@@ -15,34 +28,31 @@ export default function UploadDisplay({ imageURL, points, setPoints }) {
           width: "100%",
           position: "absolute",
           zIndex: "1",
+          objectFit: "fill",
         }}
       />
       <div
         id="hit-area"
         onMouseDown={(event) => {
-          const rect = event.target.getBoundingClientRect();
-          const x = event.clientX - rect.left;
-          const y = event.clientY - rect.top;
-          const newElem = document.createElement("div");
-          newElem.style.position = "absolute";
-          newElem.style.width = "50px";
-          newElem.style.height = "50px";
-          newElem.style.background = "black";
-          newElem.style.left = `${(x / rect.width) * 100}%`;
-          newElem.style.top = `${(y / rect.height) * 100}%`;
-          newElem.style.zIndex = "2";
-          newElem.style.transform = `translateX(-50%) translateY(-50%)`;
-          event.target.appendChild(newElem);
+          boundingBox = event.target.getBoundingClientRect();
+          x = event.clientX - boundingBox.left;
+          x = (x / boundingBox.width) * 100;
+          y = event.clientY - boundingBox.top;
+          y = (y / boundingBox.height) * 100;
+          mouseEvent = event;
+        }}
+        onMouseUp={() => {
           let newPoints = [...points];
           newPoints.push({ x: x, y: y });
           setPoints(newPoints);
+          createMarker(mouseEvent, boundingBox, x, y);
+          console.log(newPoints);
         }}
-        onMouseUp={() => console.log(points)}
         style={{
           width: "100%",
           height: "100%",
           position: "relative",
-          zIndex: "3",
+          zIndex: "2",
         }}
       ></div>
     </div>
