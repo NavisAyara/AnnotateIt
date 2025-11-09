@@ -1,5 +1,6 @@
 import { useState } from "react";
 import UploadDisplay from "./UploadedDisplay";
+import { useEffect } from "react";
 
 export default function AnnotateSection() {
   const [imgURL, setImgURL] = useState(null);
@@ -31,6 +32,11 @@ export default function AnnotateSection() {
   const handleImageChange = (event) => {
     const file = event.target.files[0];
     setImgURL(URL.createObjectURL(file));
+    const markers = document.querySelectorAll(".marker");
+    setAnnotations([]);
+    for (const marker of markers) {
+      marker.remove();
+    }
   };
 
   const saveToJSON = () => {};
