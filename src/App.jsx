@@ -1,7 +1,5 @@
 import AnnotateSection from "./components/AnnotateSection";
 
-// TODO: Percentage-based positioning for markers (for responsivity)
-
 function App() {
   return (
     <main>

@@ -1,8 +1,9 @@
 export default function UploadDisplay({ imageURL, points, setPoints }) {
   let x, y, boundingBox, mouseEvent;
 
-  const createMarker = (event, rect, localX, localY) => {
+  const createMarker = (id, event, localX, localY) => {
     const newElem = document.createElement("div");
+    newElem.id = `${id}`;
     newElem.className = "marker";
     newElem.style.left = `${localX}%`;
     newElem.style.top = `${localY}%`;
@@ -21,7 +22,6 @@ export default function UploadDisplay({ imageURL, points, setPoints }) {
       }}
     >
       <img
-        // onClick={initiateUpload}
         src={imageURL}
         style={{
           height: "100%",
@@ -36,16 +36,20 @@ export default function UploadDisplay({ imageURL, points, setPoints }) {
         onMouseDown={(event) => {
           boundingBox = event.target.getBoundingClientRect();
           x = event.clientX - boundingBox.left;
-          x = (x / boundingBox.width) * 100;
+          x = ((x / boundingBox.width) * 100).toFixed(4);
           y = event.clientY - boundingBox.top;
-          y = (y / boundingBox.height) * 100;
+          y = ((y / boundingBox.height) * 100).toFixed(4);
           mouseEvent = event;
         }}
         onMouseUp={() => {
           let newPoints = [...points];
-          newPoints.push({ x: x, y: y });
+          const id = points.length + 1 + 100;
+          newPoints.push({
+            id: id,
+            data: { x: x, y: y, name: "" },
+          });
           setPoints(newPoints);
-          createMarker(mouseEvent, boundingBox, x, y);
+          createMarker(id, mouseEvent, x, y);
           console.log(newPoints);
         }}
         style={{
