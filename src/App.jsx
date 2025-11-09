@@ -76,6 +76,11 @@ function App() {
               style={{ display: "none" }}
             ></input>
           </div>
+          <div className="action-buttons">
+            <button disabled={imgURL ? false : true}>Save</button>
+            <button disabled={imgURL ? false : true}>Load JSON</button>
+            <button disabled={imgURL ? false : true}>Save JSON</button>
+          </div>
         </div>
       </div>
     </main>

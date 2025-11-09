@@ -59,3 +59,21 @@ main > div > div {
     font-weight: bold;
     text-decoration: underline;
 }
+
+.action-buttons {
+    display: flex;
+    width: 100%;
+    justify-content: end;
+    padding-top: 20px;
+    gap: 20px;
+}
+
+.action-buttons > button {
+    padding: 10px;
+    border-radius: 0px;
+    border: 2px solid #000;
+}
+
+.action-buttons > button:disabled {
+    border-color: gainsboro;
+}
