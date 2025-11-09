@@ -1,17 +1,61 @@
 import { useState } from "react";
 
-function UploadDisplay({ imageURL, initiateUpload }) {
+function UploadDisplay({ imageURL }) {
+  const [points, setPoints] = useState([]);
   return (
-    <img
-      onClick={initiateUpload}
-      src={imageURL}
-      style={{ height: "100%", width: "100%" }}
-    />
+    <div
+      style={{
+        width: "100%",
+        height: "100%",
+        position: "relative",
+      }}
+    >
+      <img
+        // onClick={initiateUpload}
+        src={imageURL}
+        style={{
+          height: "100%",
+          width: "100%",
+          position: "absolute",
+          zIndex: "1",
+        }}
+      />
+      <div
+        id="hit-area"
+        onMouseDown={(event) => {
+          const rect = event.target.getBoundingClientRect();
+          const x = event.clientX - rect.left;
+          const y = event.clientY - rect.top;
+          const newElem = document.createElement("div");
+          newElem.style.position = "absolute";
+          newElem.style.width = "50px";
+          newElem.style.height = "50px";
+          newElem.style.background = "black";
+          newElem.style.left = `${x}px`;
+          newElem.style.top = `${y}px`;
+          newElem.style.zIndex = "2";
+          newElem.style.transform = `translateX(-50%) translateY(-50%)`;
+          event.target.appendChild(newElem);
+          let newPoints = [...points];
+          newPoints.push({ x: x, y: y });
+          setPoints(newPoints);
+        }}
+        onMouseUp={() => console.log(points)}
+        style={{
+          width: "100%",
+          height: "100%",
+          position: "relative",
+          zIndex: "3",
+        }}
+      ></div>
+    </div>
   );
 }
 
 function App() {
   const [imgURL, setImgURL] = useState(null);
+  const [isJSONLoaded, setIsJSONLoaded] = useState(false);
+  const [annotations, setAnnotations] = useState([]);
 
   const handleDragOver = (event) => {
     event.preventDefault(); // the browser will not prepare to open the image
@@ -40,6 +84,9 @@ function App() {
     setImgURL(URL.createObjectURL(file));
   };
 
+  const saveToJSON = () => {};
+  const loadFromJSON = () => {};
+
   return (
     <main>
       <header>
@@ -55,10 +102,7 @@ function App() {
             className={imgURL ? "is-displaying" : ""}
           >
             {imgURL ? (
-              <UploadDisplay
-                imageURL={imgURL}
-                initiateUpload={handleUploadClick}
-              />
+              <UploadDisplay imageURL={imgURL} />
             ) : (
               <>
                 <p>
@@ -77,9 +121,24 @@ function App() {
             ></input>
           </div>
           <div className="action-buttons">
-            <button disabled={imgURL ? false : true}>Save</button>
-            <button disabled={imgURL ? false : true}>Load JSON</button>
-            <button disabled={imgURL ? false : true}>Save JSON</button>
+            <button
+              disabled={imgURL ? false : true}
+              onClick={handleUploadClick}
+            >
+              Upload New
+            </button>
+            <button
+              disabled={imgURL && !isJSONLoaded ? false : true}
+              onClick={loadFromJSON}
+            >
+              Load JSON
+            </button>
+            <button
+              disabled={annotations.length > 0 ? false : true}
+              onClick={saveToJSON}
+            >
+              Download JSON
+            </button>
           </div>
         </div>
       </div>
