@@ -25,6 +25,7 @@ export default function AnnotateSection() {
     const extension = file.name.split(".")[1];
     if (["jpg", "png", "jpeg", "webp"].includes(extension)) {
       setImgURL(URL.createObjectURL(file));
+      setFileName(file.name.split(".")[0]);
     }
   };
 
@@ -35,7 +36,7 @@ export default function AnnotateSection() {
 
   const handleImageChange = (event) => {
     const file = event.target.files[0];
-    setFileName(file.name);
+    setFileName(file.name.split(".")[0]);
     setImgURL(URL.createObjectURL(file));
     const markers = document.querySelectorAll(".marker");
     setAnnotations([]);
