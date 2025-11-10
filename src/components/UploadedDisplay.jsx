@@ -42,15 +42,17 @@ export default function UploadDisplay({ imageURL, points, setPoints }) {
           mouseEvent = event;
         }}
         onMouseUp={() => {
-          let newPoints = [...points];
-          const id = points.length + 1 + 100;
-          newPoints.push({
-            id: id,
-            data: { x: x, y: y, name: "" },
-          });
-          setPoints(newPoints);
-          createMarker(id, mouseEvent, x, y);
-          console.log(newPoints);
+          if (points.length <= 7) {
+            let newPoints = [...points];
+            const id = points.length + 1 + 100;
+            newPoints.push({
+              id: id,
+              data: { x: x, y: y, name: "" },
+            });
+            setPoints(newPoints);
+            createMarker(id, mouseEvent, x, y);
+            console.log(newPoints);
+          }
         }}
         style={{
           width: "100%",
@@ -62,3 +64,5 @@ export default function UploadDisplay({ imageURL, points, setPoints }) {
     </div>
   );
 }
+
+// TODO: implement annotations loaded from JSON
