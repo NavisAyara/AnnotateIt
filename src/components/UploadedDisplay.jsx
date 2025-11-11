@@ -68,5 +68,3 @@ export default function UploadDisplay({ imageURL, points, setPoints }) {
     </div>
   );
 }
-
-// TODO: implement annotations loaded from JSON
