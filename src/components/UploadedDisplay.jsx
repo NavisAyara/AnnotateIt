@@ -46,7 +46,6 @@ export default function UploadDisplay({ imageURL, points, setPoints }) {
             const id = numOfPoints + 1 + 100;
             newPoints[id.toString()] = { x: x, y: y, name: "" };
             setPoints(newPoints);
-            console.log(newPoints);
             createMarker(id, x, y);
           }
         }}
