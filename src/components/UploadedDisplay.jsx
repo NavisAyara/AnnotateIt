@@ -1,11 +1,11 @@
-import { createMarker } from "../utils";
+import Marker from "./Marker";
 
 export default function UploadDisplay({ imageURL, points, setPoints }) {
+  console.log(points);
   let x, y, boundingBox;
 
   return (
     <div
-      id="interaction-container"
       style={{
         width: "100%",
         height: "100%",
@@ -46,7 +46,6 @@ export default function UploadDisplay({ imageURL, points, setPoints }) {
             const id = numOfPoints + 1 + 100;
             newPoints[id.toString()] = { x: x, y: y, name: "" };
             setPoints(newPoints);
-            createMarker(id, x, y);
           }
         }}
         style={{
@@ -56,6 +55,14 @@ export default function UploadDisplay({ imageURL, points, setPoints }) {
           zIndex: "2",
         }}
       ></div>
+      {Object.keys(points).map((point) => (
+        <Marker
+          key={point}
+          id={point}
+          localX={points[point]?.x}
+          localY={points[point]?.y}
+        />
+      ))}
     </div>
   );
 }

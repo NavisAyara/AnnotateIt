@@ -1,6 +1,6 @@
 import { useState } from "react";
 import UploadDisplay from "./UploadedDisplay";
-import { downloadJson, createMarker } from "../utils";
+import { downloadJson } from "../utils";
 
 const FILE_EXTENSIONS = ["jpg", "png", "jpeg", "webp"];
 
@@ -40,11 +40,7 @@ export default function AnnotateSection() {
     const file = event.target.files[0];
     setFileName(file.name.split(".")[0]);
     setImgURL(URL.createObjectURL(file));
-    const markers = document.querySelectorAll(".marker");
     setAnnotations({}); // clear annotations store
-    for (const marker of markers) {
-      marker.remove(); // clear rendered markers
-    }
   };
 
   const handleJsonChange = async (event) => {
@@ -53,9 +49,6 @@ export default function AnnotateSection() {
       .then((res) => res.json())
       .then((data) => {
         if (Object.keys(data ?? {}).length > 0) {
-          for (const [pointId, pointData] in Object.entries(data)) {
-            createMarker(pointId, pointData?.x, pointData?.y);
-          }
           setAnnotations(data ?? {});
         }
       });
