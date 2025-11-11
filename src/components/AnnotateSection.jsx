@@ -111,7 +111,10 @@ export default function AnnotateSection() {
         ></input>
       </div>
       <div className="action-buttons">
-        <button disabled={imgURL ? false : true} onClick={handleUploadClick}>
+        <button
+          style={{ display: imgURL ? "block" : "none" }}
+          onClick={handleUploadClick}
+        >
           Upload New
         </button>
         <button

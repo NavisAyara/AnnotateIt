@@ -72,10 +72,12 @@ main > div > div {
     padding: 10px;
     border-radius: 0px;
     border: 2px solid #000;
+    cursor: pointer;
 }
 
 .action-buttons > button:disabled {
     border-color: gainsboro;
+    cursor: default;
 }
 
 .marker {
