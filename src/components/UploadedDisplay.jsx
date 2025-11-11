@@ -1,7 +1,6 @@
 import Marker from "./Marker";
 
 export default function UploadDisplay({ imageURL, points, setPoints }) {
-  console.log(points);
   let x, y, boundingBox;
 
   return (
@@ -61,6 +60,9 @@ export default function UploadDisplay({ imageURL, points, setPoints }) {
           id={point}
           localX={points[point]?.x}
           localY={points[point]?.y}
+          points={points}
+          setPoints={setPoints}
+          name={points[point]?.name}
         />
       ))}
     </div>

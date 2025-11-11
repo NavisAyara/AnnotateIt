@@ -1,4 +1,15 @@
-function Marker({ id, localX, localY }) {
+import { useState } from "react";
+
+function Marker({ id, localX, localY, points, setPoints, name }) {
+  const [label, setLabel] = useState(name ?? "");
+
+  const updateLabel = (e) => {
+    setLabel(e.target.value);
+    const updatedPoints = { ...points };
+    updatedPoints[id].name = e.target.value;
+    setPoints(updatedPoints);
+  };
+
   return (
     <div
       id={id}
@@ -14,7 +25,7 @@ function Marker({ id, localX, localY }) {
     >
       <div className="marker"></div>
       <div className="label">
-        <input type="text" />
+        <input type="text" value={label} onChange={updateLabel} />
       </div>
     </div>
   );
