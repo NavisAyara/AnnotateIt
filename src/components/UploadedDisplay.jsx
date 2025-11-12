@@ -1,6 +1,6 @@
 import Marker from "./Marker";
 
-export default function UploadDisplay({ imageURL, points, setPoints }) {
+export default function UploadDisplay({ imageURL, store, updateStore }) {
   let x, y, boundingBox;
 
   return (
@@ -39,12 +39,12 @@ export default function UploadDisplay({ imageURL, points, setPoints }) {
         }}
         onMouseUp={() => {
           // limit to 8 points
-          const numOfPoints = Object.keys(points).length;
-          if (numOfPoints < 8) {
-            let newPoints = { ...points };
-            const id = numOfPoints + 1 + 100;
-            newPoints[id.toString()] = { x: x, y: y, name: "" };
-            setPoints(newPoints);
+          const numberOfAnnotations = Object.keys(store).length;
+          if (numberOfAnnotations < 8) {
+            let updatedAnnotations = { ...store };
+            const id = numberOfAnnotations + 1 + 100;
+            updatedAnnotations[id.toString()] = { x: x, y: y, name: "" };
+            updateStore(updatedAnnotations);
           }
         }}
         style={{
@@ -54,15 +54,15 @@ export default function UploadDisplay({ imageURL, points, setPoints }) {
           zIndex: "2",
         }}
       ></div>
-      {Object.keys(points).map((point) => (
+      {Object.keys(store).map((annotationID) => (
         <Marker
-          key={point}
-          id={point}
-          localX={points[point]?.x}
-          localY={points[point]?.y}
-          points={points}
-          setPoints={setPoints}
-          name={points[point]?.name}
+          key={annotationID}
+          id={annotationID}
+          localX={store[annotationID]?.x}
+          localY={store[annotationID]?.y}
+          annotations={store}
+          updateAnnotations={updateStore}
+          name={store[annotationID]?.name}
         />
       ))}
     </div>
