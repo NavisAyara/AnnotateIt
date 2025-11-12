@@ -6,8 +6,8 @@ const FILE_EXTENSIONS = ["jpg", "png", "jpeg", "webp"];
 
 export default function AnnotateSection() {
   const [imgURL, setImgURL] = useState(null);
-  const [annotations, setAnnotations] = useState({});
-  const [fileName, setFileName] = useState(null);
+  const [annotations, updateAnnotations] = useState({});
+  const [saveName, setSaveName] = useState(null);
 
   const handleDragOver = (event) => {
     event.preventDefault(); // the browser will not prepare to open the image
@@ -24,10 +24,10 @@ export default function AnnotateSection() {
 
     const file = event.dataTransfer.files[0];
     const fileName = file.name.split(".")[0];
-    const extension = file.name.split(".")[1];
-    if (FILE_EXTENSIONS.includes(extension)) {
+    const fileExtension = file.name.split(".")[1];
+    if (FILE_EXTENSIONS.includes(fileExtension)) {
       setImgURL(URL.createObjectURL(file));
-      setFileName(fileName);
+      setSaveName(fileName);
     }
   };
 
@@ -38,27 +38,31 @@ export default function AnnotateSection() {
 
   const handleImageChange = (event) => {
     const file = event.target.files[0];
-    setFileName(file.name.split(".")[0]);
+    setSaveName(file.name.split(".")[0]);
     setImgURL(URL.createObjectURL(file));
-    setAnnotations({}); // clear annotations store
+    updateAnnotations({}); // clear annotations store
   };
 
   const handleJsonChange = async (event) => {
     const file = event.target.files[0];
     fetch(URL.createObjectURL(file)) // due for refactor. probably a better way to do this
       .then((res) => res.json())
-      .then((data) => {
-        if (Object.keys(data ?? {}).length > 0) {
-          setAnnotations(data ?? {});
+      .then((json) => {
+        const data = json ?? {};
+        // TODO: add check to confirm it's an Object {}
+        // TODO: add error-handling
+        if (Object.keys(data).length > 0) {
+          updateAnnotations(data);
         }
       });
   };
 
   const saveToJSON = () => {
-    downloadJson(annotations, `${fileName}.json`);
+    downloadJson(annotations, `${saveName}.json`);
   };
 
   const loadFromJSON = () => {
+    // learn about component refs
     const fileInput = document.getElementById("json-input");
     fileInput.click();
   };
@@ -75,13 +79,13 @@ export default function AnnotateSection() {
         {imgURL ? (
           <UploadDisplay
             imageURL={imgURL}
-            points={annotations}
-            setPoints={setAnnotations}
+            store={annotations}
+            updateStore={updateAnnotations}
           />
         ) : (
           <p>
             Drag and drop an image or click{" "}
-            <span id="upload-button" onClick={handleUploadClick}>
+            <span className="upload-button" onClick={handleUploadClick}>
               here
             </span>
           </p>
@@ -91,6 +95,7 @@ export default function AnnotateSection() {
           type="file"
           id="image-input"
           accept=".jpg, .png, .jpeg, .webp"
+          multiple={false}
           style={{ display: "none" }}
         ></input>
         <input
