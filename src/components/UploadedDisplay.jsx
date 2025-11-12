@@ -1,7 +1,11 @@
+import { useState } from "react";
+
 import Marker from "./Marker";
 
 export default function UploadDisplay({ imageURL, store, updateStore }) {
   let x, y, boundingBox;
+
+  const [activeID, setActiveID] = useState(null);
 
   return (
     <div
@@ -24,23 +28,30 @@ export default function UploadDisplay({ imageURL, store, updateStore }) {
       <div
         id="hit-area"
         onMouseDown={(event) => {
-          // calculates positions relative to the hit-area container
-          // x  => (top-left x Position Relative To Viewport - top-left x Container Position Relative To Viewport)
-          // y  => (top-left y Position Relative To Viewport - top-left y Container Position Relative To Viewport)
-          //
-          // then calculates percantage for responsive positions
-          // (x or y coordinates / hit area dimensions (width or height) * 100)
+          if (activeID) {
+            // removes current label visibility
+            setActiveID(null);
+          } else {
+            // calculates positions relative to the hit-area container
+            // x  => (top-left x Position Relative To Viewport - top-left x Container Position Relative To Viewport)
+            // y  => (top-left y Position Relative To Viewport - top-left y Container Position Relative To Viewport)
+            //
+            // then calculates percantage for responsive positions
+            // (x or y coordinates / hit area dimensions (width or height) * 100)
 
-          boundingBox = event.target.getBoundingClientRect();
-          x = event.clientX - boundingBox.left;
-          x = ((x / boundingBox.width) * 100).toFixed(4);
-          y = event.clientY - boundingBox.top;
-          y = ((y / boundingBox.height) * 100).toFixed(4);
+            boundingBox = event.target.getBoundingClientRect();
+            x = event.clientX - boundingBox.left;
+            x = ((x / boundingBox.width) * 100).toFixed(4);
+            y = event.clientY - boundingBox.top;
+            y = ((y / boundingBox.height) * 100).toFixed(4);
+          }
         }}
         onMouseUp={() => {
           // limit to 8 points
           const numberOfAnnotations = Object.keys(store).length;
-          if (numberOfAnnotations < 8) {
+
+          if (numberOfAnnotations < 8 && boundingBox) {
+            // && boundingBox adds a criteria that checks if a point is in memory
             let updatedAnnotations = { ...store };
             const id = numberOfAnnotations + 1 + 100;
             updatedAnnotations[id.toString()] = { x: x, y: y, name: "" };
@@ -63,6 +74,8 @@ export default function UploadDisplay({ imageURL, store, updateStore }) {
           annotations={store}
           updateAnnotations={updateStore}
           name={store[annotationID]?.name}
+          activeID={activeID}
+          setActiveID={setActiveID}
         />
       ))}
     </div>

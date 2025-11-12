@@ -1,6 +1,15 @@
 import { useState } from "react";
 
-function Marker({ id, localX, localY, annotations, updateAnnotations, name }) {
+function Marker({
+  id,
+  localX,
+  localY,
+  annotations,
+  updateAnnotations,
+  name,
+  activeID,
+  setActiveID,
+}) {
   const [label, setLabel] = useState(name ?? "");
 
   const updateLabel = (e) => {
@@ -23,9 +32,22 @@ function Marker({ id, localX, localY, annotations, updateAnnotations, name }) {
         event.stopPropagation();
       }}
     >
-      <div className="marker"></div>
-      <div className="label">
-        <input type="text" value={label} onChange={updateLabel} />
+      <div
+        className="marker"
+        onClick={() => {
+          setActiveID(id);
+        }}
+      ></div>
+      <div
+        className="label"
+        style={{ display: activeID === id ? "block" : "none" }}
+      >
+        <input
+          type="text"
+          value={label}
+          onChange={updateLabel}
+          className="label-input"
+        />
       </div>
     </div>
   );
